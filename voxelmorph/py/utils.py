@@ -27,6 +27,10 @@ def get_backend():
     """
     return 'pytorch' if os.environ.get('VXM_BACKEND') == 'pytorch' else 'tensorflow'
 
+def read_img_from_dir(directory):
+    path_file_list = os.listdir(directory)
+    path_file_list = list(map(lambda x: os.path.join(directory, x), path_file_list))
+    return path_file_list
 
 def read_file_list(filename, prefix=None, suffix=None):
     '''
@@ -37,6 +41,8 @@ def read_file_list(filename, prefix=None, suffix=None):
         prefix: File prefix. Default is None.
         suffix: File suffix. Default is None.
     '''
+    if os.path.isdir(filename):
+        return read_img_from_dir(filename)
     with open(filename, 'r') as file:
         content = file.readlines()
     filelist = [x.strip() for x in content if x.strip()]
@@ -115,7 +121,7 @@ def load_volfile(
         vol, _ = pad(vol, pad_shape)
 
     if add_feat_axis:
-        vol = vol[..., np.newaxis]
+        vol = vol[np.newaxis, ...]
 
     if resize_factor != 1:
         vol = resize(vol, resize_factor)

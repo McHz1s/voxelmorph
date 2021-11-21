@@ -96,8 +96,8 @@ def scan_to_scan(vol_names, bidir=False, batch_size=1, prob_same=0, no_warp=Fals
 
         # cache zeros
         if not no_warp and zeros is None:
-            shape = scan1.shape[1:-1]
-            zeros = np.zeros((batch_size, *shape, len(shape)))
+            shape = scan1.shape[2:]
+            zeros = np.zeros((batch_size, len(shape), *shape))
 
         invols = [scan1, scan2]
         outvols = [scan2, scan1] if bidir else [scan2]

@@ -100,6 +100,8 @@ class Grad:
         self.loss_mult = loss_mult
 
     def loss(self, _, y_pred):
+        if len(y_pred.shape) == 4:
+            y_pred = torch.unsqueeze(y_pred, dim=2)
         dy = torch.abs(y_pred[:, :, 1:, :, :] - y_pred[:, :, :-1, :, :])
         dx = torch.abs(y_pred[:, :, :, 1:, :] - y_pred[:, :, :, :-1, :])
         dz = torch.abs(y_pred[:, :, :, :, 1:] - y_pred[:, :, :, :, :-1])

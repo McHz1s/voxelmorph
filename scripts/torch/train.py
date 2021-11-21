@@ -113,7 +113,7 @@ else:
         train_files, batch_size=args.batch_size, bidir=args.bidir, add_feat_axis=add_feat_axis)
 
 # extract shape from sampled input
-inshape = next(generator)[0][0].shape[1:-1]
+inshape = next(generator)[0][0].shape[2:]
 
 # prepare model folder
 model_dir = args.model_dir
@@ -196,8 +196,10 @@ for epoch in range(args.initial_epoch, args.epochs):
 
         # generate inputs (and true outputs) and convert them to tensors
         inputs, y_true = next(generator)
-        inputs = [torch.from_numpy(d).to(device).float().permute(0, 4, 1, 2, 3) for d in inputs]
-        y_true = [torch.from_numpy(d).to(device).float().permute(0, 4, 1, 2, 3) for d in y_true]
+        # inputs = [torch.from_numpy(d).to(device).float().permute(0, 4, 1, 2, 3) for d in inputs]
+        # y_true = [torch.from_numpy(d).to(device).float().permute(0, 4, 1, 2, 3) for d in y_true]
+        inputs = [torch.from_numpy(d).to(device).float() for d in inputs]
+        y_true = [torch.from_numpy(d).to(device).float() for d in y_true]
 
         # run inputs through the model to produce a warped image and flow field
         y_pred = model(*inputs)
